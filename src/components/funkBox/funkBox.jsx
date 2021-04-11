@@ -1,16 +1,16 @@
 import React from "react"
 import * as ToneBox from "../../FunkBox.js"
 import { Screen } from "../funkBoxComp/screen/screen.jsx"
-import { TapeWaves } from "../funkBoxComp/tapeWaves/tapeWaves.jsx"
 import { SequenceChannel } from "../funkBoxComp/sequenceChannel/sequenceChannel.jsx"
-
+import {StartButton} from "../funkBoxComp/startButton/startButton.jsx"
+import {Reglage} from "../funkBoxComp/reglage/reglage.jsx"
 export const FunkBox = () => {
   return (
     <div className="funk-box">
-      <h1>
-        Funk
-        <br />
-        Box
+
+      <h1 >
+      <span className="h1a">FUNK</span>
+      <span className="h1a">BOX</span>
       </h1>
       <div className="sequence-container">
         <SequenceChannel
@@ -31,13 +31,13 @@ export const FunkBox = () => {
         />
       </div>
       <Screen name={"Main"}></Screen>
-      <div className="tape-container">
-        <TapeWaves />
-        <div className="tape-panel"></div>
-        <TapeWaves />
-      </div>
+      <Reglage control="Bpm" onChange={(change) => ToneBox.changeBpm(change)} min="60" max="240" step="1"/>
       <button className="start-button" onClick={() => ToneBox.toggleLoop()}>
-        start
+        <StartButton />
+        <span className="start-span-wrapper">
+          <span></span>
+          <span className="start-span">start</span>
+        </span>
       </button>
     </div>
   )

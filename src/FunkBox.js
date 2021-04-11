@@ -29,6 +29,10 @@ const setupLoop = () => {
     instrument: new Tone.MembraneSynth().toDestination(),
     eventCb: seqMembrane,
   })
+  setupSampler({
+    channel: "HihatChannel",
+    eventCb: seqSampler,
+  })
   setupInstrument({
     channel: "NoiseChannel",
     instrument: new Tone.NoiseSynth().toDestination(),
@@ -38,10 +42,6 @@ const setupLoop = () => {
     channel: "PolyChannel",
     instrument: new Tone.PolySynth().toDestination(),
     eventCb: seqPoly,
-  })
-  setupSampler({
-    channel: "HihatChannel",
-    eventCb: seqSampler,
   })
   instrumentChannels.PolyChannel.instrument.set({ detune: -1200 })
   canvas = document.querySelector("#Main-Screen")
@@ -57,6 +57,8 @@ const setupLoop = () => {
     [["C1"]],
     [["C1"]],
   ])
+  let bpm = document.querySelector(".reglage-input-Bpm")
+  bpm.value = Tone.Transport.bpm.value
   canvasLoop.start(0)
   Tone.Transport.start()
   setUpLoop = true
@@ -141,8 +143,8 @@ function seqPoly(time) {
 }
 function seqSampler(time) {
   drawSequence(
-    instrumentChannels.PolyChannel.drawTarget,
-    instrumentChannels.NoiseChannel.drawClass
+    instrumentChannels.HihatChannel.drawTarget,
+    instrumentChannels.HihatChannel.drawClass
   )
   instrumentChannels.HihatChannel.instrument.triggerAttackRelease(
     [24],
@@ -160,6 +162,13 @@ const instrumentChannels = {
     drawTarget: ".blink-Kick",
     drawClass: "seq-now",
   },
+  HihatChannel: {
+    sequence: null,
+    instrument: null,
+    sequencePattern: [[], [], [], [], [], [], [], []],
+    drawTarget: ".blink-Hihat",
+    drawClass: "seq-now",
+  },
   NoiseChannel: {
     sequence: null,
     instrument: null,
@@ -172,13 +181,6 @@ const instrumentChannels = {
     instrument: null,
     sequencePattern: [[], [], [], [], [], [], [], []],
     drawTarget: ".blink-Poly",
-    drawClass: "seq-now",
-  },
-  HihatChannel: {
-    sequence: null,
-    instrument: null,
-    sequencePattern: [[], [], [], [], [], [], [], []],
-    drawTarget: ".blink-Hihat",
     drawClass: "seq-now",
   },
 }
@@ -212,6 +214,8 @@ export const changeInstrument = (channel, instrumentName) => {
 }
 
 export const changeStep = (step, name) => {
+  console.log(name, step)
+  console.log(instrumentChannels[name])
   if (setUpLoop) {
     let tempArr = instrumentChannels[name].sequence.events[step]
     switch (instrumentChannels[name].sequence.events[step].length) {
@@ -246,13 +250,21 @@ export const changeStep = (step, name) => {
 }
 
 export const toggleLoop = () => {
-  let StartStop = document.querySelector(".start-button")
+  let StartStop = document.querySelector(".start-span")
   setUpLoop ? Tone.Transport.toggle() : setupLoop()
-  //changeInstrument("KickChannel", "Membrane")
   StartStop.innerHTML === "start"
     ? (StartStop.innerHTML = "stop")
     : (StartStop.innerHTML = "start")
 }
 export const stopLoop = () => {
   Tone.Transport.stop()
+}
+
+export const changeBpm = (change) => {
+  Tone.Transport.bpm.value = change
+  document
+    .querySelector(".reglage-svg-Bpm")
+    .setAttribute("transform", "rotate(" + (change - 60) * 2 + ")")
+  document.querySelector(".reglage-p-Bpm").innerText =
+    Math.ceil(Tone.Transport.bpm.value) + " bpm"
 }
