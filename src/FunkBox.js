@@ -1,224 +1,172 @@
 import * as Tone from "tone"
-let setUpLoop = null
 
-// setup new synthInstrument channel with sequencer
-function setupInstrument({ channel, instrument, eventCb }) {
-  instrumentChannels[channel].instrument = instrument
-  instrumentChannels[channel].sequence = new Tone.Sequence(
-    eventCb,
-    instrumentChannels[channel].sequencePattern
-  ).start(0)
-}
-// setup new sampler channel with sequencer
-function setupSampler({ channel, eventCb }) {
-  instrumentChannels[channel].instrument = new Tone.Sampler({
-    urls: {
-      24: "asHihat01.wav",
-    },
-    baseUrl: process.env.PUBLIC_URL + "/Drums/",
-  }).toDestination()
-  instrumentChannels[channel].sequence = new Tone.Sequence(
-    eventCb,
-    instrumentChannels[channel].sequencePattern
-  ).start(0)
-}
-// setup
-const setupLoop = () => {
-  setupInstrument({
-    channel: "KickChannel",
-    instrument: new Tone.MembraneSynth().toDestination(),
-    eventCb: seqMembrane,
-  })
-  setupSampler({
-    channel: "HihatChannel",
-    eventCb: seqSampler,
-  })
-  setupInstrument({
-    channel: "NoiseChannel",
-    instrument: new Tone.NoiseSynth().toDestination(),
-    eventCb: seqNoise,
-  })
-  setupInstrument({
-    channel: "PolyChannel",
-    instrument: new Tone.PolySynth().toDestination(),
-    eventCb: seqPoly,
-  })
-  instrumentChannels.PolyChannel.instrument.set({ detune: -1200 })
-  canvas = document.querySelector("#Main-Screen")
-  ctx = canvas.getContext("2d")
-  ctx.moveTo(0, 0)
-  canvasLoop = new Tone.Sequence(drawLoopCanvas, [
-    [["C1"]],
-    [["C1"]],
-    [["C1"]],
-    [["C1"]],
-    [["C1"]],
-    [["C1"]],
-    [["C1"]],
-    [["C1"]],
-  ])
-  let bpm = document.querySelector(".reglage-input-Bpm")
-  bpm.value = Tone.Transport.bpm.value
-  canvasLoop.start(0)
-  Tone.Transport.start()
-  setUpLoop = true
-}
-
-// Pulse Animation
-let canvas = null
-let ctx = null
-let canvasLoop = null
-let counter = 0
-function drawLoopCanvas() {
-  Tone.Transport.schedule((time) => {
-    Tone.Draw.schedule(() => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.beginPath()
-      ctx.arc(10 * counter, 5 * counter, 2 * counter, 0, 2 * Math.PI)
-      ctx.stroke()
-      counter > 30 ? (counter = 0) : counter++
-      /*
-      if (!ctx.circle) {
-        ctx.arc(100 * counter, 50 * counter, 20 * counter, 0, 2 * Math.PI)
-        ctx.stroke()
-        ctx.circle = "rect"
-      } else if (ctx.circle === "rect") {
-        ctx.rect(80 * counter, 30 * counter, 40, 40)
-        //ctx.arcTo(75, 95, 40, 40, 2 * Math.PI)
-        ctx.stroke()
-        ctx.circle = null
-      }
-      counter > 32 ? (counter = 0) : counter++
-      //do drawing or DOM manipulation here
-      */
-    }, time)
-  }, "+0.05")
-}
-
-// Tone.Sequence callBack functions
-function drawSequence(drawTarget, drawClass) {
-  let channelLabel = document.querySelector(drawTarget)
-  Tone.Transport.schedule((time) => {
-    Tone.Draw.schedule(() => {
-      channelLabel.classList.contains(drawClass)
-        ? channelLabel.classList.add(drawClass + "-second")
-        : channelLabel.classList.add(drawClass)
-    }, time)
-    Tone.Transport.schedule((time) => {
-      Tone.Draw.schedule(() => {
-        channelLabel.classList.remove(drawClass)
-        channelLabel.classList.remove(drawClass + "-second")
-      }, time)
-    }, "+0.2")
-  }, "+0.05")
-}
-function seqMembrane(time, note) {
-  drawSequence(
-    instrumentChannels.KickChannel.drawTarget,
-    instrumentChannels.KickChannel.drawClass
-  )
-  instrumentChannels.KickChannel.instrument.triggerAttackRelease(
-    note,
-    "16n",
-    time
-  )
-}
-function seqNoise(time) {
-  drawSequence(
-    instrumentChannels.NoiseChannel.drawTarget,
-    instrumentChannels.NoiseChannel.drawClass
-  )
-  instrumentChannels.NoiseChannel.instrument.triggerAttackRelease(time)
-}
-function seqPoly(time) {
-  drawSequence(
-    instrumentChannels.PolyChannel.drawTarget,
-    instrumentChannels.NoiseChannel.drawClass
-  )
-  instrumentChannels.PolyChannel.instrument.triggerAttackRelease(
-    ["C4", "E4", "G4", "B4"],
-    "16n",
-    time
-  )
-}
-function seqSampler(time) {
-  drawSequence(
-    instrumentChannels.HihatChannel.drawTarget,
-    instrumentChannels.HihatChannel.drawClass
-  )
-  instrumentChannels.HihatChannel.instrument.triggerAttackRelease(
-    [24],
-    "16n",
-    time
-  )
-}
-
-// exports
-const instrumentChannels = {
-  KickChannel: {
-    sequence: null,
-    instrument: null,
-    sequencePattern: [[], [], [], [], [], [], [], []],
-    drawTarget: ".blink-Kick",
-    drawClass: "seq-now",
-  },
-  HihatChannel: {
-    sequence: null,
-    instrument: null,
-    sequencePattern: [[], [], [], [], [], [], [], []],
-    drawTarget: ".blink-Hihat",
-    drawClass: "seq-now",
-  },
-  NoiseChannel: {
-    sequence: null,
-    instrument: null,
-    sequencePattern: [[], [], [], [], [], [], [], []],
-    drawTarget: ".blink-Noise",
-    drawClass: "seq-now",
-  },
-  PolyChannel: {
-    sequence: null,
-    instrument: null,
-    sequencePattern: [[], [], [], [], [], [], [], []],
-    drawTarget: ".blink-Poly",
-    drawClass: "seq-now",
-  },
-}
-
-//
-export const changeInstrument = (channel, instrumentName) => {
-  let eventCb = null
-  let instrument = null
-
-  if (instrumentName === "Sampler") {
-    setupSampler({ channel, seqSampler })
-  } else {
-    switch (instrumentName) {
-      case "Noise":
-        eventCb = seqNoise
-        instrument = new Tone.NoiseSynth().toDestination()
-        break
-      case "Membrane":
-        eventCb = seqMembrane
-        instrument = new Tone.MembraneSynth().toDestination()
-        break
-      case "Poly":
-        instrument = new Tone.PolySynth().toDestination()
-        break
-      default:
-        return null
-    }
-    setupInstrument({ channel, instrument, eventCb })
-    return true
+class MembraneSynth extends Tone.MembraneSynth {
+  constructor() {
+    super()
+    this.eventCb = this.seqMembrane
+  }
+  seqMembrane(time, note) {
+    this.drawSequence()
+    this.instrument.triggerAttackRelease(note, "16n", time)
   }
 }
 
-export const changeStep = (step, name) => {
-  console.log(name, step)
-  console.log(instrumentChannels[name])
-  if (setUpLoop) {
-    let tempArr = instrumentChannels[name].sequence.events[step]
-    switch (instrumentChannels[name].sequence.events[step].length) {
+class NoiseSynth extends Tone.NoiseSynth {
+  constructor() {
+    super()
+    this.eventCb = this.seqNoise
+  }
+  seqNoise(time) {
+    this.drawSequence()
+    this.instrument.triggerAttackRelease(time)
+  }
+}
+
+class PolySynth extends Tone.PolySynth {
+  constructor() {
+    super()
+    this.eventCb = this.seqPoly
+    this.set({ detune: -1200 })
+  }
+  seqPoly(time) {
+    this.drawSequence()
+    this.instrument.triggerAttackRelease(["C4", "E4", "G4", "B4"], "16n", time)
+  }
+}
+
+class Sampler extends Tone.Sampler {
+  constructor() {
+    super({
+      urls: {
+        24: "asHihat01.wav",
+      },
+      baseUrl: process.env.PUBLIC_URL + "/Drums/",
+    })
+    this.eventCb = this.seqSampler
+  }
+  seqSampler(time) {
+    this.drawSequence()
+    this.instrument.triggerAttackRelease([24], "16n", time)
+  }
+}
+
+class canvasAnimation {
+  constructor(target) {
+    this.drawTarget = document.querySelector(target)
+    this.animation = this.drawTarget.getContext("2d")
+    this.animation.moveTo(0, 0)
+    this.eventCb = this.seqCanvas
+
+    this.counter = 0
+
+    this.canvasLoop = new Sequence(
+      "Main",
+      this.eventCb,
+      [
+        [["C1"]],
+        [["C1"]],
+        [["C1"]],
+        [["C1"]],
+        [["C1"]],
+        [["C1"]],
+        [["C1"]],
+        [["C1"]],
+      ],
+      this,
+      target
+    )
+  }
+  seqCanvas() {
+    this.drawSequence()
+    Tone.Transport.schedule((time) => {
+      Tone.Draw.schedule(() => {
+        this.instrument.animation.clearRect(
+          0,
+          0,
+          this.instrument.drawTarget.width,
+          this.instrument.drawTarget.height
+        )
+        this.instrument.animation.beginPath()
+        this.instrument.animation.arc(
+          10 * this.instrument.counter,
+          5 * this.instrument.counter,
+          2 * this.instrument.counter,
+          0,
+          2 * Math.PI
+        )
+        this.instrument.animation.stroke()
+        this.instrument.counter > 30
+          ? (this.instrument.counter = 0)
+          : this.instrument.counter++
+      }, time)
+    }, "+0.05")
+  }
+}
+
+class Sequence extends Tone.Sequence {
+  static newSequence(eventCb, sequencePattern) {
+    return new Sequence(eventCb, sequencePattern)
+  }
+  constructor(name, eventCb, sequencePattern, instrument, drawTarget) {
+    super(eventCb, sequencePattern)
+    this.instrument = instrument ? instrument : "No Sound"
+    this.drawTarget = drawTarget ? drawTarget : ".blink-" + name
+    this.drawClass = "seq-now"
+    this.start(0)
+  }
+  drawSequence() {
+    let channelLabel = document.querySelector(this.drawTarget)
+    Tone.Transport.schedule((time) => {
+      Tone.Draw.schedule(() => {
+        channelLabel.classList.contains(this.drawClass)
+          ? channelLabel.classList.add(this.drawClass + "-second")
+          : channelLabel.classList.add(this.drawClass)
+      }, time)
+      Tone.Transport.schedule((time) => {
+        Tone.Draw.schedule(() => {
+          channelLabel.classList.remove(this.drawClass)
+          channelLabel.classList.remove(this.drawClass + "-second")
+        }, time)
+      }, "+0.2")
+    }, "+0.05")
+  }
+}
+
+class instrumentChannel {
+  constructor(instrument, name) {
+    this.name = name ? name : ""
+    this.instrument = this.setInstrument(instrument)
+    this.sequencePattern = [[], [], [], [], [], [], [], []]
+    this.sequence = new Sequence(
+      this.name,
+      this.instrument.eventCb,
+      this.sequencePattern,
+      this.instrument
+    )
+    this.drawTarget = ".blink-" + name
+    this.drawClass = "seq-now"
+  }
+  setInstrument(instrument) {
+    switch (instrument) {
+      case "Membrane":
+        return new MembraneSynth().toDestination()
+      case "Noise":
+        return new NoiseSynth().toDestination()
+      case "Poly":
+        return new PolySynth().toDestination()
+      default:
+        return new Sampler().toDestination()
+    }
+  }
+  getInstrument() {
+    return this.instrument
+  }
+  getEventCb() {
+    return this.eventCb
+  }
+  changeStep = (step) => {
+    let tempArr = this.sequence.events[step]
+    switch (this.sequence.events[step].length) {
       case 0:
         tempArr = [["C1"]]
         break
@@ -226,14 +174,14 @@ export const changeStep = (step, name) => {
         tempArr = [["C1"], ["C1"]]
         break
       case 2:
-        instrumentChannels[name].sequence.events[step][0][0]
+        this.sequence.events[step][0][0]
           ? (tempArr = [[], ["C1"]])
           : (tempArr = [["C1"], ["C1"], ["C1"]])
         break
       case 3:
-        if (instrumentChannels[name].sequence.events[step][0][0]) {
+        if (this.sequence.events[step][0][0]) {
           tempArr = [[], ["C1"], ["C1"]]
-        } else if (instrumentChannels[name].sequence.events[step][1][0]) {
+        } else if (this.sequence.events[step][1][0]) {
           tempArr = [[], [], ["C1"]]
         } else {
           tempArr = []
@@ -243,15 +191,72 @@ export const changeStep = (step, name) => {
         tempArr = []
         break
     }
-    instrumentChannels[name].sequence.events[step] = tempArr
+    this.sequence.events[step] = tempArr
+    // return till component => illustrera note, paus, triplet
   }
+  /*
+  initSequence() {
+    this.sequence = new Tone.Sequence(this.eventCb, this.sequencePattern).start(
+      0
+    )
+  }
+  */
+}
 
+class mixerChannel {
+  constructor(channelList) {
+    this.mixerBus = {}
+    channelList ? this.setMixer(channelList) : (this.mixerBus = {})
+  }
+  setChannel(name, type) {
+    this.mixerBus[name + "Channel"] = new instrumentChannel(type, name)
+  }
+  setMixer(channelList) {
+    for (let channel of channelList) {
+      this.setChannel(channel.name, channel.type)
+    }
+  }
+  changeStep(channel, step) {
+    if (this.mixerBus[channel]) {
+      this.mixerBus[channel].changeStep(step)
+    } else {
+      console.log("There is no channel named " + channel)
+    }
+  }
+}
+
+let isSetup = null
+
+let mixer = {}
+
+const channelList = [
+  { name: "Kick", type: "Membrane" },
+  { name: "Noise", type: "Noise" },
+  { name: "Poly", type: "Poly" },
+  { name: "Hihat", type: "Sampler" },
+]
+
+// setup
+const Setup = () => {
+  mixer = new mixerChannel(channelList)
+  new canvasAnimation("#Main-Screen")
+  changeBpm(60)
+  Tone.Transport.start()
+  isSetup = true
+}
+
+// exports
+
+export const changeStep = (step, name) => {
+  if (isSetup) {
+    mixer.changeStep(name, step)
+  }
   // return till component => illustrera note, paus, triplet
 }
 
 export const toggleLoop = () => {
   let StartStop = document.querySelector(".start-span")
-  setUpLoop ? Tone.Transport.toggle() : setupLoop()
+  isSetup ? Tone.Transport.toggle() : Setup()
   StartStop.innerHTML === "start"
     ? (StartStop.innerHTML = "stop")
     : (StartStop.innerHTML = "start")

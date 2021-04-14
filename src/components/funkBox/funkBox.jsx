@@ -2,15 +2,22 @@ import React from "react"
 import * as ToneBox from "../../FunkBox.js"
 import { Screen } from "../funkBoxComp/screen/screen.jsx"
 import { SequenceChannel } from "../funkBoxComp/sequenceChannel/sequenceChannel.jsx"
-import {StartButton} from "../funkBoxComp/startButton/startButton.jsx"
-import {Reglage} from "../funkBoxComp/reglage/reglage.jsx"
+import { StartButton } from "../funkBoxComp/startButton/startButton.jsx"
+import { Reglage } from "../funkBoxComp/reglage/reglage.jsx"
+import { Cube } from "../cube/cube.jsx"
 export const FunkBox = () => {
   return (
     <div className="funk-box">
-
-      <h1 >
-      <span className="h1a">FUNK</span>
-      <span className="h1a">BOX</span>
+      <Cube children={<Reglage
+        control="Bpm"
+        onChange={(change) => ToneBox.changeBpm(change)}
+        min="60"
+        max="240"
+        step="1"
+      />} />
+      <h1>
+        <span className="h1a">FUNK</span>
+        <span className="h1a">BOX</span>
       </h1>
       <div className="sequence-container">
         <SequenceChannel
@@ -30,8 +37,7 @@ export const FunkBox = () => {
           changeStep={(step, channel) => ToneBox.changeStep(step, channel)}
         />
       </div>
-      <Screen name={"Main"}></Screen>
-      <Reglage control="Bpm" onChange={(change) => ToneBox.changeBpm(change)} min="60" max="240" step="1"/>
+      <Screen name={"Main"} />
       <button className="start-button" onClick={() => ToneBox.toggleLoop()}>
         <StartButton />
         <span className="start-span-wrapper">
