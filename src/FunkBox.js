@@ -35,12 +35,12 @@ class PolySynth extends Tone.PolySynth {
 }
 
 class Sampler extends Tone.Sampler {
-  constructor() {
+  constructor(s) {
     super({
       urls: {
         24: "asHihat01.wav",
       },
-      baseUrl: process.env.PUBLIC_URL + "/Drums/",
+      baseUrl: "https://github.com/Phnom/FunkBox/tree/main/public/Drums",
     })
     this.eventCb = this.seqSampler
   }
