@@ -40,7 +40,7 @@ class Sampler extends Tone.Sampler {
       urls: {
         24: "asHihat01.wav",
       },
-      baseUrl: "https://github.com/Phnom/FunkBox/tree/main/public/Drums",
+      baseUrl: process.env.PUBLIC_URL + "/Drums/",
     })
     this.eventCb = this.seqSampler
   }
