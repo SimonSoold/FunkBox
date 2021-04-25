@@ -35,12 +35,10 @@ class PolySynth extends Tone.PolySynth {
 }
 
 class Sampler extends Tone.Sampler {
-  constructor(s) {
+  constructor(sampleUrls, sampleBaseUrl) {
     super({
-      urls: {
-        24: "asHihat01.wav",
-      },
-      baseUrl: process.env.PUBLIC_URL + "/Drums/",
+      urls: sampleUrls,
+      baseUrl: sampleBaseUrl ? sampleBaseUrl : process.env.PUBLIC_URL,
     })
     this.eventCb = this.seqSampler
   }
@@ -50,15 +48,56 @@ class Sampler extends Tone.Sampler {
   }
 }
 
-class canvasAnimation {
+/*
+class SampleRecorder {
   constructor(target) {
     this.drawTarget = document.querySelector(target)
     this.animation = this.drawTarget.getContext("2d")
     this.animation.moveTo(0, 0)
-    this.eventCb = this.seqCanvas
-
+    this.startButton = document.querySelector(
+      ".sample-recorder > .recorder-start-button"
+    )
+    this.stopButton = document.querySelector(
+      ".sample-recorder > .recorder-stop-button"
+    )
+    this.mic = new Tone.UserMedia()
+    this.micFFT = new Tone.FFT()
+    this.meter = new Tone.Meter()
+    this.mic.connect(this.micFFT)
+    this.mic.connect(this.meter)
+    this.startButton.addEventListener("click", () => this.open())
+    this.stopButton.addEventListener("click", () => this.close())
+  }
+  open(time) {
+    this.mic.open().then(() => {
+      let interval = setInterval(() => {
+        console.log(this.micFFT)
+        console.log(this.meter.getValue())
+        console.log(this.micFFT.getValue())
+        console.log(this.drawTarget)
+        console.log(this.animation)
+      }, 100)
+      setTimeout(
+        () => {
+          clearInterval(interval)
+          this.close()
+        },
+        time ? time : 2000
+      )
+    })
+  }
+  close() {
+    this.mic.close()
+  }
+}
+*/
+class canvasAnimation {
+  constructor(target, eventCb) {
+    this.drawTarget = document.querySelector(target)
+    this.animation = this.drawTarget.getContext("2d")
+    this.animation.moveTo(0, 0)
+    this.eventCb = eventCb ? eventCb : this.seqCanvas
     this.counter = 0
-
     this.canvasLoop = new Sequence(
       "Main",
       this.eventCb,
@@ -155,7 +194,9 @@ class instrumentChannel {
       case "Poly":
         return new PolySynth().toDestination()
       default:
-        return new Sampler().toDestination()
+        return new Sampler({
+          24: "/Drums/asHihat01.wav",
+        }).toDestination()
     }
   }
   getInstrument() {
@@ -206,7 +247,9 @@ class instrumentChannel {
 class mixerChannel {
   constructor(channelList) {
     this.mixerBus = {}
-    channelList ? this.setMixer(channelList) : (this.mixerBus = {})
+    this.setMixer(channelList)
+    //this.sampleRecorder = new SampleRecorder("#Main-Screen")
+    this.canvas = new canvasAnimation("#Main-Screen")
   }
   setChannel(name, type) {
     this.mixerBus[name + "Channel"] = new instrumentChannel(type, name)
@@ -239,7 +282,6 @@ const channelList = [
 // setup
 const Setup = () => {
   mixer = new mixerChannel(channelList)
-  new canvasAnimation("#Main-Screen")
   changeBpm(60)
   Tone.Transport.start()
   isSetup = true
