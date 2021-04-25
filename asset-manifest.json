@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/FunkBox/static/css/main.ad294be6.chunk.css",
+    "main.js": "/FunkBox/static/js/main.a137c07a.chunk.js",
+    "main.js.map": "/FunkBox/static/js/main.a137c07a.chunk.js.map",
+    "runtime-main.js": "/FunkBox/static/js/runtime-main.f8d2766e.js",
+    "runtime-main.js.map": "/FunkBox/static/js/runtime-main.f8d2766e.js.map",
+    "static/js/2.9de3dff7.chunk.js": "/FunkBox/static/js/2.9de3dff7.chunk.js",
+    "static/js/2.9de3dff7.chunk.js.map": "/FunkBox/static/js/2.9de3dff7.chunk.js.map",
+    "static/js/3.ff831653.chunk.js": "/FunkBox/static/js/3.ff831653.chunk.js",
+    "static/js/3.ff831653.chunk.js.map": "/FunkBox/static/js/3.ff831653.chunk.js.map",
+    "index.html": "/FunkBox/index.html",
+    "static/css/main.ad294be6.chunk.css.map": "/FunkBox/static/css/main.ad294be6.chunk.css.map",
+    "static/js/2.9de3dff7.chunk.js.LICENSE.txt": "/FunkBox/static/js/2.9de3dff7.chunk.js.LICENSE.txt",
+    "static/media/App.scss": "/FunkBox/static/media/PressStart2P-vaV7.2ebf1a35.ttf",
+    "static/media/SequenceStep.3e84c90a.svg": "/FunkBox/static/media/SequenceStep.3e84c90a.svg",
+    "static/media/StartButton.3e0f588c.svg": "/FunkBox/static/media/StartButton.3e0f588c.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f8d2766e.js",
+    "static/js/2.9de3dff7.chunk.js",
+    "static/css/main.ad294be6.chunk.css",
+    "static/js/main.a137c07a.chunk.js"
+  ]
+}
