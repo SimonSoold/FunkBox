@@ -2,8 +2,18 @@ import React from "react"
 import * as ToneBox from "../../FunkBox.js"
 import { Screen } from "../funkBoxComp/screen/screen.jsx"
 import { SequenceChannel } from "../funkBoxComp/sequenceChannel/sequenceChannel.jsx"
-import { StartButton } from "../funkBoxComp/startButton/startButton.jsx"
+//import { StartButton } from "../funkBoxComp/startButton/startButton.jsx"
 import { Reglage } from "../funkBoxComp/reglage/reglage.jsx"
+
+export const FunkBox = () => {
+  return (
+    <div className="funkBox">
+      
+    </div>
+  )
+}
+
+/*
 export const FunkBox = () => {
   return (
     <div className="funk-box">
@@ -40,12 +50,9 @@ export const FunkBox = () => {
       </div>
       <Screen name={"Main"} />
       <button className="start-button" onClick={() => ToneBox.toggleLoop()}>
-        <StartButton />
-        <span className="start-span-wrapper">
-          <span></span>
-          <span className="start-span">start</span>
-        </span>
+        <span className="start-span">start</span>
       </button>
     </div>
   )
 }
+*/
