@@ -200,13 +200,17 @@ export const toggleLoop = () => {
 
 
 class Sequence extends Tone.Sequence {
-  static newSequence(eventCb, sequencePattern) {
-    return new Sequence(eventCb, sequencePattern)
+  static newSequence(eventCb, sequencePattern, pattern) {
+    return new Sequence(eventCb, sequencePattern, pattern)
   }
-  constructor(eventCb, instrument) {
-    super(eventCb, [[], [], [], [], [], [], [], []])
+  constructor(eventCb, instrument, pattern) {
+    super(eventCb, pattern ? pattern : [[], [], [], [], [], [], [], []])
+    this.pattern = pattern
     this.instrument = instrument ? instrument : "No Sound"
     this.start(0)
+  }
+  getPattern() {
+    return this.events
   }
   setStep(step) {
     let spanList = ""
@@ -261,9 +265,13 @@ class Sampler extends Tone.Sampler {
   }
 }
 class instrumentChannel {
-  constructor(name) {
+  constructor(name, pattern) {
     this.instrument = this.setInstrument(name)
-    this.sequence = new Sequence(this.instrument.eventCb, this.instrument)
+    this.pattern = pattern
+    this.sequence = new Sequence(this.instrument.eventCb, this.instrument, this.pattern)
+  }
+  getPattern() {
+    return this.sequence.getPattern()
   }
   setInstrument(instrument) {
       return new Sampler({
@@ -274,18 +282,37 @@ class instrumentChannel {
     return this.sequence.setStep(step)
   }
 }
-const channelList = [
-  "Kick",
-  "Snare",
-  "Hihat",
-]
-export const instruments = {}
+const channelData = {
+  Kick: [[], [], [], [], [], [], [], []],
+  Snare: [[], [], [], [], [], [], [], []],
+  Hihat: [[], [], [], [], [], [], [], []]
+}
 
 const setup = () => {
-  channelList.forEach((channel) => {
-    instruments[channel] = new instrumentChannel(channel)
+  const channelList = Object.keys(channelData)
+  channelList.forEach(channel => {
+    instruments[channel] = new instrumentChannel(channel, channelData[channel])
   })
 }
+
+export const channelList = () => {
+  const channelList = Object.keys(channelData)
+  return channelList
+}
+
+export const storeData = () => {
+  channelList().forEach(channel => {
+    channelData[channel] = instruments[channel].getPattern()
+  })
+  return channelData
+}
+export const loadData = (data) => {
+  channelList().forEach(channel => {
+    channelData[channel] = data[channel]
+  })
+}
+
+export const instruments = {}
 
 export const toggle = (innerText) => {
   if (innerText === "Let's Go") {

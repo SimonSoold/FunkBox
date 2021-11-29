@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import "./App.scss"
-import { toggle, instruments, changeValue } from "./FunkBox.js"
-//import * as ToneBox from "./FunkBox.js"
-//import SequenceChannel from "./components/sequenceChannel"
-//import ControllItem from "./components/controlItem"
+import { toggle, instruments, changeValue, channelList } from "./FunkBox.js"
 
 const App = () => {
   const [isloaded, setLoad ] = useState(false)
@@ -12,12 +9,6 @@ const App = () => {
     startSpan.innerText = toggle(startSpan.innerText)
     if (!isloaded) setLoad(true)
   }
-  const channelList = [
-    "Kick",
-    "Snare",
-    "Hihat",
-    "Shaker"
-  ]
   return (
   <div className="App">
     <h1>
@@ -25,7 +16,7 @@ const App = () => {
       <span>BOX</span>
     </h1>
     <div className="sequenceContainer">
-      { isloaded ? channelList.map((channel, index) => (
+      { isloaded ? channelList().map((channel, index) => (
       <SequenceChannel key={index} channel={channel
       }/>
       ))
