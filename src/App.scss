@@ -133,11 +133,11 @@ body {
           box-sizing: border-box;
           padding: 0.25rem;
           font-size: 0.76rem;
-          transition: all 0.05s ease-in-out;
-          -webkit-transition: all 0.05s ease-in-out;
-          -moz-transition: all 0.05s ease-in-out;
-          -ms-transition: all 0.05s ease-in-out;
-          -o-transition: all 0.05s ease-in-out;
+          transition: all 1ms ease-in-out;
+          -webkit-transition: all 1ms ease-in-out;
+          -moz-transition: all 1ms ease-in-out;
+          -ms-transition: all 1ms ease-in-out;
+          -o-transition: all 1ms ease-in-out;
           div {
             height: 100%;
             width: 100%;
@@ -166,26 +166,6 @@ body {
           }
         }
       }
-      .sequenceChannel:nth-child(1).draw {
-        .sequenceStep {
-          background: $color-primary-3;
-        }
-      }
-      .sequenceChannel:nth-child(2).draw {
-        .sequenceStep {
-          background: $color-secondary-1-3;
-        }
-      }
-      .sequenceChannel:nth-child(3).draw {
-        .sequenceStep {
-          background: $color-secondary-2-3;
-        }
-      }
-      .sequenceChannel:nth-child(4).draw {
-        .sequenceStep {
-          background: $color-complement-3;
-        }
-      }
       .sequenceChannel:nth-child(1) {
         .sequenceStep {
           div:hover {
@@ -212,6 +192,26 @@ body {
           div:hover {
             border: 4px solid $color-complement-2;
           }
+        }
+      }
+      .sequenceChannel:nth-child(1).draw {
+        .sequenceStep {
+          background: $color-primary-3;
+        }
+      }
+      .sequenceChannel:nth-child(2).draw {
+        .sequenceStep {
+          background: $color-secondary-1-3;
+        }
+      }
+      .sequenceChannel:nth-child(3).draw {
+        .sequenceStep {
+          background: $color-secondary-2-3;
+        }
+      }
+      .sequenceChannel:nth-child(4).draw {
+        .sequenceStep {
+          background: $color-complement-3;
         }
       }
     }

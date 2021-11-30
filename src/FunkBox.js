@@ -267,18 +267,16 @@ class Sampler extends Tone.Sampler {
     this.eventCb = this.seqSampler
   }
   seqSampler(time) {
-    this.instrument.triggerAttackRelease([24], "16n", time)
     let channelLabel = document.querySelector(this.instrument.drawClass)
+    Tone.Draw.schedule(() => {
+      channelLabel.classList.add("draw")
+    }, time)
     Tone.Transport.schedule((time) => {
       Tone.Draw.schedule(() => {
-        channelLabel.classList.add("draw")
+        channelLabel.classList.remove("draw")
       }, time)
-      Tone.Transport.schedule((time) => {
-        Tone.Draw.schedule(() => {
-          channelLabel.classList.remove("draw")
-        }, time)
-      }, "+0.02")
-    }, "+0.8")
+    }, "+0.02")
+    this.instrument.triggerAttackRelease([24], "16n", time)
   }
 }
 class instrumentChannel {
