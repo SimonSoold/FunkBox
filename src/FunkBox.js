@@ -198,6 +198,10 @@ export const toggleLoop = () => {
 }
 */
 
+const round = (value, precision) => {
+  var multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}
 
 class Sequence extends Tone.Sequence {
   static newSequence(eventCb, sequencePattern, pattern) {
@@ -275,7 +279,7 @@ class instrumentChannel {
   }
   setInstrument(instrument) {
       return new Sampler({
-          24: `/Drums/as${instrument}01.wav`,
+          24: `/Drums/${instrument}1.wav`,
       }).toDestination()
   }
   setStep(step) {
@@ -285,6 +289,7 @@ class instrumentChannel {
 const channelData = {
   Kick: [[], [], [], [], [], [], [], []],
   Snare: [[], [], [], [], [], [], [], []],
+  Clap: [[], [], [], [], [], [], [], []],
   Hihat: [[], [], [], [], [], [], [], []]
 }
 
@@ -315,7 +320,7 @@ export const loadData = (data) => {
 export const instruments = {}
 
 export const toggle = (innerText) => {
-  if (innerText === "Let's Go") {
+  if (innerText === "Load") {
     Tone.Transport.bpm.value = 80;
     Tone.start()
     setup()
@@ -334,12 +339,15 @@ const changeBpm = (direction) => {
   document.querySelector(".bpmDisplay .displayP").innerText = Math.floor(Tone.Transport.bpm.value)
 }
 
-const changeVolume = () => {
-  console.log(Tone)
-  console.log(Tone.Transport)
-  //document.querySelector("volumeDisplay").innerText = Tone.Transport.volume.value
+const changeSwing = (direction) => {
+  if (direction === "up") {
+    Tone.Transport.swing >= 0.95 ? Tone.Transport.swing = 0 : Tone.Transport.swing = round(Tone.Transport.swing += 0.1, 1)
+  } else {
+    Tone.Transport.swing <= 0 ? Tone.Transport.swing = 1 : round(Tone.Transport.swing -= 0.1, 1)
+  }
+  document.querySelector(".swingDisplay .displayP").innerText = Math.round(Tone.Transport.swing * 100)
 }
 
 export const changeValue = (direction, name) => {
-  name === "bpm" ? changeBpm(direction) : changeVolume(direction)
+  name === "bpm" ? changeBpm(direction) : changeSwing(direction)
 }

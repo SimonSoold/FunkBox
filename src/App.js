@@ -2,6 +2,11 @@ import React, { useState } from "react"
 import "./App.scss"
 import { toggle, instruments, changeValue, channelList } from "./FunkBox.js"
 
+// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+let vh = window.innerHeight * 0.01;
+// Then we set the value in the --vh custom property to the root of the document
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
 const App = () => {
   const [isloaded, setLoad ] = useState(false)
   const start = () => {
@@ -28,8 +33,8 @@ const App = () => {
       <div className="controlContainer">
         <ControllItem name="bpm"/>
         <DisplayItem name="bpm" />
-        <ControllItem name="volume"/>
-        <DisplayItem name="volume" />
+        <ControllItem name="swing"/>
+        <DisplayItem name="swing" />
       </div>
       : 
       <div className="menuController">
@@ -38,7 +43,7 @@ const App = () => {
     }
     <div className="startButtonContainer">
       <button className="startButton" onClick={() => start()}>
-        <span className="startSpan">Let's Go</span>
+        <span className="startSpan">Load</span>
       </button>
     </div>
   </div>
