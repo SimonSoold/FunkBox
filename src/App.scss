@@ -116,6 +116,11 @@ body {
       grid-gap: 0.5rem;
       padding: 0.5rem;
       .sequenceChannel {
+        animation: fadeIn linear 1s;
+        -webkit-animation: fadeIn linear 1s;
+        -moz-animation: fadeIn linear 1s;
+        -o-animation: fadeIn linear 1s;
+        -ms-animation: fadeIn linear 1s;
         display: grid;
         grid-template-columns: repeat(8, 1fr);
         grid-gap: 0.5rem;
@@ -192,6 +197,11 @@ body {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 0.5rem;
+      animation: fadeIn linear 1s;
+      -webkit-animation: fadeIn linear 1s;
+      -moz-animation: fadeIn linear 1s;
+      -o-animation: fadeIn linear 1s;
+      -ms-animation: fadeIn linear 1s;
       .displayContainer {
         height: 100%;
         display: flex;
@@ -309,4 +319,28 @@ button {
       }
     }
   } 
+}
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
 }
