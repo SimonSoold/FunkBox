@@ -257,21 +257,35 @@ class Sequence extends Tone.Sequence {
   }
 }
 class Sampler extends Tone.Sampler {
-  constructor(sampleUrls, sampleBaseUrl) {
+  constructor(sampleUrls, name) {
     super({
       urls: sampleUrls,
-      baseUrl: sampleBaseUrl ? sampleBaseUrl : process.env.PUBLIC_URL,
+      baseUrl: process.env.PUBLIC_URL,
     })
+    this.name = name
+    this.drawClass = "."+this.name+"Step"
     this.eventCb = this.seqSampler
   }
   seqSampler(time) {
     this.instrument.triggerAttackRelease([24], "16n", time)
+    let channelLabel = document.querySelector(this.instrument.drawClass)
+    Tone.Transport.schedule((time) => {
+      Tone.Draw.schedule(() => {
+        channelLabel.classList.add("draw")
+      }, time)
+      Tone.Transport.schedule((time) => {
+        Tone.Draw.schedule(() => {
+          channelLabel.classList.remove("draw")
+        }, time)
+      }, "+0.02")
+    }, "+0.8")
   }
 }
 class instrumentChannel {
   constructor(name, pattern) {
-    this.instrument = this.setInstrument(name)
     this.pattern = pattern
+    this.name = name
+    this.instrument = this.setInstrument(this.name)
     this.sequence = new Sequence(this.instrument.eventCb, this.instrument, this.pattern)
   }
   getPattern() {
@@ -280,7 +294,7 @@ class instrumentChannel {
   setInstrument(instrument) {
       return new Sampler({
           24: `/Drums/${instrument}1.wav`,
-      }).toDestination()
+      }, this.name).toDestination()
   }
   setStep(step) {
     return this.sequence.setStep(step)

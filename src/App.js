@@ -58,7 +58,7 @@ const SequenceChannel = ({channel}) => {
     stepDiv.innerHTML = spanList
   }
   return (
-  <div className="sequenceChannel">
+  <div className={"sequenceChannel " + channel + "Step"}>
       {patterns.map((index) => (
         <button key={index} className="sequenceStep" onClick={() => changeStep(index)}>
             <div className={channel+index}>
@@ -84,7 +84,6 @@ const ControllItem = ({name}) => {
 }
 
 const DisplayItem = ({name}) => {
-  console.log(name)
   return (
     <div className={"displayContainer " + name + "Display"}>
       <p>
