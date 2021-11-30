@@ -1,25 +1,23 @@
 {
   "files": {
-    "main.css": "/FunkBox/static/css/main.fff6e17c.chunk.css",
-    "main.js": "/FunkBox/static/js/main.d284295a.chunk.js",
-    "main.js.map": "/FunkBox/static/js/main.d284295a.chunk.js.map",
-    "runtime-main.js": "/FunkBox/static/js/runtime-main.b09429a8.js",
-    "runtime-main.js.map": "/FunkBox/static/js/runtime-main.b09429a8.js.map",
-    "static/js/2.5fdffdb0.chunk.js": "/FunkBox/static/js/2.5fdffdb0.chunk.js",
-    "static/js/2.5fdffdb0.chunk.js.map": "/FunkBox/static/js/2.5fdffdb0.chunk.js.map",
-    "static/js/3.7caaa0cb.chunk.js": "/FunkBox/static/js/3.7caaa0cb.chunk.js",
-    "static/js/3.7caaa0cb.chunk.js.map": "/FunkBox/static/js/3.7caaa0cb.chunk.js.map",
+    "main.css": "/FunkBox/static/css/main.b1125997.chunk.css",
+    "main.js": "/FunkBox/static/js/main.c260c8e1.chunk.js",
+    "main.js.map": "/FunkBox/static/js/main.c260c8e1.chunk.js.map",
+    "runtime-main.js": "/FunkBox/static/js/runtime-main.960f8fcd.js",
+    "runtime-main.js.map": "/FunkBox/static/js/runtime-main.960f8fcd.js.map",
+    "static/js/2.86c7a03f.chunk.js": "/FunkBox/static/js/2.86c7a03f.chunk.js",
+    "static/js/2.86c7a03f.chunk.js.map": "/FunkBox/static/js/2.86c7a03f.chunk.js.map",
+    "static/js/3.c0c3239e.chunk.js": "/FunkBox/static/js/3.c0c3239e.chunk.js",
+    "static/js/3.c0c3239e.chunk.js.map": "/FunkBox/static/js/3.c0c3239e.chunk.js.map",
     "index.html": "/FunkBox/index.html",
-    "static/css/main.fff6e17c.chunk.css.map": "/FunkBox/static/css/main.fff6e17c.chunk.css.map",
-    "static/js/2.5fdffdb0.chunk.js.LICENSE.txt": "/FunkBox/static/js/2.5fdffdb0.chunk.js.LICENSE.txt",
-    "static/media/App.scss": "/FunkBox/static/media/PressStart2P-vaV7.2ebf1a35.ttf",
-    "static/media/SequenceStep.3e84c90a.svg": "/FunkBox/static/media/SequenceStep.3e84c90a.svg",
-    "static/media/StartButton.3e0f588c.svg": "/FunkBox/static/media/StartButton.3e0f588c.svg"
+    "static/css/main.b1125997.chunk.css.map": "/FunkBox/static/css/main.b1125997.chunk.css.map",
+    "static/js/2.86c7a03f.chunk.js.LICENSE.txt": "/FunkBox/static/js/2.86c7a03f.chunk.js.LICENSE.txt",
+    "static/media/App.scss": "/FunkBox/static/media/PressStart2P-vaV7.2ebf1a35.ttf"
   },
   "entrypoints": [
-    "static/js/runtime-main.b09429a8.js",
-    "static/js/2.5fdffdb0.chunk.js",
-    "static/css/main.fff6e17c.chunk.css",
-    "static/js/main.d284295a.chunk.js"
+    "static/js/runtime-main.960f8fcd.js",
+    "static/js/2.86c7a03f.chunk.js",
+    "static/css/main.b1125997.chunk.css",
+    "static/js/main.c260c8e1.chunk.js"
   ]
 }
